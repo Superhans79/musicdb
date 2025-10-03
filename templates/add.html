@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h2 class="mb-3">➕ Add New Song</h2>
+  <form method="POST" class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Artist</label>
+      <input type="text" name="artist" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Title</label>
+      <input type="text" name="title" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Song</label>
+      <input type="text" name="song" class="form-control">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Label</label>
+      <input type="text" name="label" class="form-control">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Podcast Played On</label>
+      <input type="text" name="podcast_played_on" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Genre</label>
+      <input type="text" name="genre" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">BPM</label>
+      <input type="number" name="bpm" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Key</label>
+      <input type="text" name="song_key" class="form-control">
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="/" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

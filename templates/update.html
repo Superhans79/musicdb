@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Update Record</title></head>
+<body>
+<h1>Update Record</h1>
+<form method="POST">
+    Artist: <input name="artist" value="{{ song[1] }}"><br>
+    Title: <input name="title" value="{{ song[2] }}"><br>
+    Song: <input name="song" value="{{ song[3] }}"><br>
+    Label: <input name="label" value="{{ song[4] }}"><br>
+    Podcast Played On: <input name="podcast_played_on" value="{{ song[5] }}"><br>
+    Genre: <input name="genre" value="{{ song[6] }}"><br>
+    BPM: <input type="number" name="bpm" value="{{ song[7] }}"><br>
+    Key: <input name="song_key" value="{{ song[8] }}"><br>
+    <input type="submit" value="Update">
+</form>
+</body>
+</html>

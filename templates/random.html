@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h2>🎲 Random Song</h2>
+  <div class="card text-dark">
+    <div class="card-body">
+      <h5 class="card-title">{{ song.artist }} – {{ song.title }}</h5>
+      <p class="card-text">
+        <strong>Song:</strong> {{ song.song }} <br>
+        <strong>Label:</strong> {{ song.label }} <br>
+        <strong>Podcast:</strong> {{ song.podcast_played_on }} <br>
+        <strong>Genre:</strong> {{ song.genre }} <br>
+        <strong>BPM:</strong> {{ song.bpm }} <br>
+        <strong>Key:</strong> {{ song.song_key }}
+      </p>
+      <a href="/" class="btn btn-primary">Back to List</a>
+    </div>
+  </div>
+{% endblock %}

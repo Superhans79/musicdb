@@ -1,0 +1,4 @@
+artist,title,song,label,podcast_played_on,genre,bpm,song_key
+Daft Punk,Discovery,One More Time,Virgin,Spotify,House,123,C
+Radiohead,OK Computer,Paranoid Android,Parlophone,Apple Podcasts,Alternative,84,Am
+Deadmau5,Random Album Title,Ghosts N Stuff,Mau5trap,Spotify,Progressive House,128,Gm
