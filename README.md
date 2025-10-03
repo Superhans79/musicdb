@@ -2,11 +2,6 @@
 
 
 
-
-
-
-
-
 A simple Music Database project for storing and searching track metadata.
 Includes a terminal app and a Flask web app, with support for batch import/export.
 
