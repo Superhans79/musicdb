@@ -9,12 +9,20 @@ app.secret_key = "supersecretkey123"  # you can make this any random string
 # ==============================
 # Database Connection
 # ==============================
+import os
+import psycopg2
+from urllib.parse import urlparse
+
 def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="musicuser",
-        password="password123",  # change if you picked a different one
-        database="musicdb"
+    url = os.getenv("DATABASE_URL", "postgresql://neondb_owner:npg_SL6kgmXIj9Jw@ep-silent-water-adqp55tv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+    result = urlparse(url)
+    return psycopg2.connect(
+        database=result.path[1:],
+        user=result.username,
+        password=result.password,
+        host=result.hostname,
+        port=result.port,
+        sslmode="require"
     )
 
 # ==============================
