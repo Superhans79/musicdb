@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4 text-center">✏️ Edit Song</h1>
+
+<form method="POST">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <input class="form-control" name="artist" placeholder="Artist" value="{{ song.artist }}" required>
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="title" placeholder="Title" value="{{ song.title }}" required>
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="song" placeholder="Song" value="{{ song.song }}">
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="label" placeholder="Label" value="{{ song.label }}">
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="podcast_played_on" placeholder="Podcast Played On" value="{{ song.podcast_played_on }}">
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" name="genre" placeholder="Genre" value="{{ song.genre }}">
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" name="bpm" placeholder="BPM" type="number" value="{{ song.bpm }}">
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" name="song_key" placeholder="Key" value="{{ song.song_key }}">
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="album_art_url" placeholder="Album Art URL" value="{{ song.album_art_url }}">
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" name="preview_url" placeholder="Preview URL" value="{{ song.preview_url }}">
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary px-5">Update</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary ms-3">Cancel</a>
+    </div>
+</form>
+{% endblock %}

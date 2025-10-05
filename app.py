@@ -1,96 +1,135 @@
-from flask import Flask, render_template, request, redirect, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
-import csv
-import io
 import random
+import os
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey123"  # you can make this any random string
 
-# Database connection
-def get_connection():
+# ==============================
+# Database Connection
+# ==============================
+def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="musicuser",      # 👈 your MySQL username
-        password="musicpass",  # 👈 your MySQL password
+        user="musicuser",
+        password="password123",  # change if you picked a different one
         database="musicdb"
     )
 
-# Home page - list all songs
-@app.route("/")
+# ==============================
+# Routes
+# ==============================
+
+# Home Page – show all songs
+@app.route('/')
 def index():
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True) 
     cursor.execute("SELECT * FROM songs")
     songs = cursor.fetchall()
+    print("DEBUG SONGS:", songs)  # 👈 Add this
+    cursor.close()
     conn.close()
-    return render_template("index.html", songs=songs)
+    return render_template('index.html', songs=songs)
 
-# Add a new song
-@app.route("/add", methods=["GET", "POST"])
-def add():
-    if request.method == "POST":
-        artist = request.form["artist"]
-        title = request.form["title"]
-        song = request.form["song"]
-        label = request.form["label"]
-        podcast = request.form["podcast_played_on"]
-        genre = request.form["genre"]
-        bpm = request.form["bpm"]
-        song_key = request.form["song_key"]
 
-        conn = get_connection()
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '')
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT * FROM songs
+        WHERE artist LIKE %s OR title LIKE %s OR genre LIKE %s
+    """, (f"%{query}%", f"%{query}%", f"%{query}%"))
+    songs = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('index.html', songs=songs, query=query)
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_song():
+    if request.method == 'POST':
+        artist = request.form['artist']
+        title = request.form['title']
+        song = request.form['song']
+        label = request.form['label']
+        podcast = request.form['podcast_played_on']
+        genre = request.form['genre']
+        bpm = request.form['bpm']
+        song_key = request.form['song_key']
+        album_art_url = request.form['album_art_url']
+        preview_url = request.form['preview_url']
+
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO songs (artist, title, song, label, podcast_played_on, genre, bpm, song_key)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (artist, title, song, label, podcast, genre, bpm, song_key))
+            INSERT INTO songs (artist, title, song, label, podcast_played_on, genre, bpm, song_key, album_art_url, preview_url)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (artist, title, song, label, podcast, genre, bpm, song_key, album_art_url, preview_url))
         conn.commit()
+        cursor.close()
         conn.close()
-        return redirect("/")
-    return render_template("add.html")
+        flash("✅ Song added successfully!", "success")
+        return redirect(url_for('index'))
+    
+    return render_template('add.html')
 
-# Random song page
+
+# Random Song Page
 @app.route("/random")
 def random_song():
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM songs")
     songs = cursor.fetchall()
-    conn.close()
-    if songs:
-        song = random.choice(songs)
-        return render_template("random.html", song=song)
-    else:
-        return "No songs in the database yet!"
+    cursor.close()
 
-# Export songs to CSV
-@app.route("/export")
-def export():
-    conn = get_connection()
+    song = random.choice(songs) if songs else None
+    return render_template("random.html", song=song)
+
+@app.route('/delete/<int:song_id>')
+def delete_song(song_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM songs WHERE id = %s", (song_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash("🗑️ Song deleted!", "danger")
+    return redirect(url_for('index'))
+
+
+@app.route('/edit/<int:song_id>', methods=['GET', 'POST'])
+def edit_song(song_id):
+    conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM songs")
-    songs = cursor.fetchall()
+    cursor.execute("SELECT * FROM songs WHERE id = %s", (song_id,))
+    song = cursor.fetchone()
+
+    if request.method == 'POST':
+        data = {key: request.form[key] for key in request.form}
+        cursor.execute("""
+            UPDATE songs
+            SET artist=%s, title=%s, song=%s, label=%s, podcast_played_on=%s, genre=%s,
+                bpm=%s, song_key=%s, album_art_url=%s, preview_url=%s
+            WHERE id=%s
+        """, (data['artist'], data['title'], data['song'], data['label'], data['podcast_played_on'],
+              data['genre'], data['bpm'], data['song_key'], data['album_art_url'], data['preview_url'], song_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("✅ Song updated successfully!", "success")
+        return redirect(url_for('index'))
+
+    cursor.close()
     conn.close()
+    return render_template('edit.html', song=song)
 
-    if not songs:
-        return "No songs available to export!"
 
-    output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=songs[0].keys())
-    writer.writeheader()
-    writer.writerows(songs)
 
-    mem = io.BytesIO()
-    mem.write(output.getvalue().encode("utf-8"))
-    mem.seek(0)
-    output.close()
-
-    return send_file(
-        mem,
-        mimetype="text/csv",
-        as_attachment=True,
-        download_name="songs.csv"
-    )
-
+# ==============================
+# Run App
+# ==============================
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,19 +1,33 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h2>🎲 Random Song</h2>
-  <div class="card text-dark">
-    <div class="card-body">
-      <h5 class="card-title">{{ song.artist }} – {{ song.title }}</h5>
-      <p class="card-text">
-        <strong>Song:</strong> {{ song.song }} <br>
-        <strong>Label:</strong> {{ song.label }} <br>
-        <strong>Podcast:</strong> {{ song.podcast_played_on }} <br>
-        <strong>Genre:</strong> {{ song.genre }} <br>
-        <strong>BPM:</strong> {{ song.bpm }} <br>
-        <strong>Key:</strong> {{ song.song_key }}
-      </p>
-      <a href="/" class="btn btn-primary">Back to List</a>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg rounded-3">
+        {% if song.album_art_url %}
+          <img src="{{ song.album_art_url }}" class="card-img-top" alt="Album Art">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ song.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ song.artist }}</h6>
+          <ul class="list-group list-group-flush mt-3">
+            <li class="list-group-item"><strong>Song:</strong> {{ song.song }}</li>
+            <li class="list-group-item"><strong>Label:</strong> {{ song.label }}</li>
+            <li class="list-group-item"><strong>Podcast Played On:</strong> {{ song.podcast_played_on }}</li>
+            <li class="list-group-item"><strong>Genre:</strong> {{ song.genre }}</li>
+            <li class="list-group-item"><strong>BPM:</strong> {{ song.bpm }}</li>
+            <li class="list-group-item"><strong>Key:</strong> {{ song.song_key }}</li>
+          </ul>
+          {% if song.preview_url %}
+            <audio controls class="w-100 mt-3">
+              <source src="{{ song.preview_url }}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
+</div>
 {% endblock %}

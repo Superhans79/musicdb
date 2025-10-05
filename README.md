@@ -1,45 +1,48 @@
-🎵 MusicDB Project
+🎶 MusicDB — Record Collection Manager
 
+A simple Python + Flask + MySQL app to manage a music collection.
+Supports adding songs, searching, random picks, and exporting to CSV.
+Styled with Bootstrap 5 for a clean UI.
 
+✨ Features
 
-A simple Music Database project for storing and searching track metadata.
-Includes a terminal app and a Flask web app, with support for batch import/export.
+🎵 Add songs with details:
 
-⚡ Tech Stack
+Artist
 
-Language: Python 3.10+
+Title
 
-Framework: Flask (Web App)
+Song
 
-Database: MySQL (with MySQL Connector)
+Label
 
-Frontend: HTML (Jinja2 templates)
+Podcast played on
 
-Tools: Git, Virtualenv, Tabulate, CSV
+Genre
 
-📖 Features
+BPM
 
-Add, search, update, delete songs
+Key
 
-Batch import/export via TXT/CSV
+📋 View all songs in a table
 
-Random song picker
+🔍 Search by artist or title (terminal app)
 
-Full CRUD from terminal or web app
+🎲 Pick a random song
 
-Handles duplicates automatically on import
+⬇️ Export collection to CSV
 
-🗄️ Database Schema
+🖥️ Web app with Bootstrap UI
 
-Table: songs
+🛠️ Tech Stack
 
-Column	Type	Description
-id	INT (PK)	Auto-increment unique ID
-artist	VARCHAR	Artist name
-title	VARCHAR	Album / collection title
-song	VARCHAR	Song name
-label	VARCHAR	Record label
-podcast_played_on	VARCHAR	Podcast / platform played on
-genre	VARCHAR	Song genre (e.g. House, Rock)
-bpm	INT	Beats per minute (e.g. 128)
-song_key	VARCHAR	Musical key (e.g. Am, C#, F)
+Backend: Python (Flask)
+
+Database: MySQL
+
+Frontend: Bootstrap 5 (HTML templates with Jinja2)
+
+Other: Tabulate (for pretty terminal tables)
+
+🚀 Getting Started
+1. Clone the repo
