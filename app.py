@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 import random
 import os
+import psycopg2.extras
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey123"  # you can make this any random string
@@ -33,7 +34,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True) 
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute("SELECT * FROM songs")
     songs = cursor.fetchall()
     print("DEBUG SONGS:", songs)  # 👈 Add this
@@ -46,7 +47,7 @@ def index():
 def search():
     query = request.args.get('q', '')
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute("""
         SELECT * FROM songs
         WHERE artist LIKE %s OR title LIKE %s OR genre LIKE %s
@@ -111,7 +112,7 @@ def delete_song(song_id):
 @app.route('/edit/<int:song_id>', methods=['GET', 'POST'])
 def edit_song(song_id):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute("SELECT * FROM songs WHERE id = %s", (song_id,))
     song = cursor.fetchone()
 
