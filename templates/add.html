@@ -1,23 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="mb-4 text-center">➕ Add a New Song</h1>
+<div class="container py-4">
+  <h2 class="mb-4">➕ Add a New Song</h2>
 
-<form method="POST">
+  <form action="{{ url_for('add_song') }}" method="POST" class="card p-4 shadow-lg">
     <div class="row g-3">
-        <div class="col-md-6"><input class="form-control" name="artist" placeholder="Artist" required></div>
-        <div class="col-md-6"><input class="form-control" name="title" placeholder="Title" required></div>
-        <div class="col-md-6"><input class="form-control" name="song" placeholder="Song"></div>
-        <div class="col-md-6"><input class="form-control" name="label" placeholder="Label"></div>
-        <div class="col-md-6"><input class="form-control" name="podcast_played_on" placeholder="Podcast Played On"></div>
-        <div class="col-md-4"><input class="form-control" name="genre" placeholder="Genre"></div>
-        <div class="col-md-4"><input class="form-control" name="bpm" placeholder="BPM" type="number"></div>
-        <div class="col-md-4"><input class="form-control" name="song_key" placeholder="Key"></div>
-        <div class="col-md-6"><input class="form-control" name="album_art_url" placeholder="Album Art URL"></div>
-        <div class="col-md-6"><input class="form-control" name="preview_url" placeholder="Preview URL"></div>
+      <div class="col-md-6">
+        <label class="form-label">Artist</label>
+        <input type="text" name="artist" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Song</label>
+        <input type="text" name="song" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Label</label>
+        <input type="text" name="label" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Podcast Played On</label>
+        <input type="text" name="podcast_played_on" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Genre</label>
+        <input type="text" name="genre" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">BPM</label>
+        <input type="number" name="bpm" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Key</label>
+        <input type="text" name="song_key" class="form-control">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Album Art URL</label>
+        <input type="url" name="album_art_url" class="form-control">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Preview URL (MP3)</label>
+        <input type="url" name="preview_url" class="form-control">
+      </div>
     </div>
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-success px-5">Add Song</button>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary ms-3">Back</a>
+
+    <div class="mt-4 text-end">
+      <button type="submit" class="btn btn-success">💾 Save Song</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
     </div>
-</form>
+  </form>
+</div>
 {% endblock %}

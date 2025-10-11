@@ -86,13 +86,14 @@ def add_song():
     return render_template('add.html')
 
 
-# Random Song Page
 @app.route("/random")
 def random_song():
-    cursor = db.cursor(dictionary=True)
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute("SELECT * FROM songs")
     songs = cursor.fetchall()
     cursor.close()
+    conn.close()
 
     song = random.choice(songs) if songs else None
     return render_template("random.html", song=song)
