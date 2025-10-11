@@ -25,9 +25,9 @@
         <label class="form-label">Podcast Played On</label>
         <input type="text" name="podcast_played_on" class="form-control">
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">Genre</label>
-        <input type="text" name="genre" class="form-control">
+        <input type="text" name="genre" class="form-control" placeholder="Optional — auto-fetched from Spotify">
       </div>
       <div class="col-md-4">
         <label class="form-label">BPM</label>
@@ -37,18 +37,10 @@
         <label class="form-label">Key</label>
         <input type="text" name="song_key" class="form-control">
       </div>
-      <div class="col-md-12">
-        <label class="form-label">Album Art URL</label>
-        <input type="url" name="album_art_url" class="form-control">
-      </div>
-      <div class="col-md-12">
-        <label class="form-label">Preview URL (MP3)</label>
-        <input type="url" name="preview_url" class="form-control">
-      </div>
     </div>
 
     <div class="mt-4 text-end">
-      <button type="submit" class="btn btn-success">💾 Save Song</button>
+      <button type="submit" class="btn btn-success">🎧 Fetch from Spotify & Save</button>
       <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
     </div>
   </form>

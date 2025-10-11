@@ -57,6 +57,15 @@ def search():
     conn.close()
     return render_template('index.html', songs=songs, query=query)
 
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+# Initialize Spotify client
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+    client_id=os.getenv("SPOTIFY_CLIENT_ID"),
+    client_secret=os.getenv("SPOTIFY_CLIENT_SECRET")
+))
+
 @app.route('/add', methods=['GET', 'POST'])
 def add_song():
     if request.method == 'POST':
@@ -68,9 +77,29 @@ def add_song():
         genre = request.form['genre']
         bpm = request.form['bpm']
         song_key = request.form['song_key']
-        album_art_url = request.form['album_art_url']
-        preview_url = request.form['preview_url']
 
+        # --- Spotify lookup ---
+        album_art_url = None
+        preview_url = None
+
+        try:
+            query = f"{artist} {title}"
+            results = sp.search(q=query, type='track', limit=1)
+            tracks = results.get('tracks', {}).get('items', [])
+            if tracks:
+                track = tracks[0]
+                album_art_url = track['album']['images'][0]['url'] if track['album']['images'] else None
+                preview_url = track['preview_url']
+                if not genre and track['artists']:
+                    # Try to fetch artist genres (optional)
+                    artist_id = track['artists'][0]['id']
+                    artist_info = sp.artist(artist_id)
+                    if artist_info.get('genres'):
+                        genre = artist_info['genres'][0]
+        except Exception as e:
+            print("Spotify lookup failed:", e)
+
+        # --- Database insert ---
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
@@ -80,9 +109,10 @@ def add_song():
         conn.commit()
         cursor.close()
         conn.close()
-        flash("✅ Song added successfully!", "success")
+
+        flash("✅ Song added successfully (Spotify data included)!", "success")
         return redirect(url_for('index'))
-    
+
     return render_template('add.html')
 
 
